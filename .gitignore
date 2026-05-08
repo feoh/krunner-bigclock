@@ -1,0 +1,6 @@
+build*/
+.cache/
+*.user
+*.kdev4
+.clang-format
+.clang-tidy
