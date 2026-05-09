@@ -21,14 +21,15 @@ add_library(krunner_bigclock MODULE)
 target_sources(krunner_bigclock PRIVATE
     src/bigclockrunner.cpp
     src/bigclockrunner.h
-    src/bigclockwidget.cpp
-    src/bigclockwidget.h
 )
 
 target_link_libraries(krunner_bigclock PRIVATE
-    Qt6::Widgets
     KF6::I18n
     KF6::Runner
+)
+
+target_compile_definitions(krunner_bigclock PRIVATE
+    BIGCLOCK_INSTALL_BINDIR="${KDE_INSTALL_FULL_BINDIR}"
 )
 
 set_target_properties(krunner_bigclock PROPERTIES
@@ -37,4 +38,24 @@ set_target_properties(krunner_bigclock PROPERTIES
     CXX_EXTENSIONS OFF
 )
 
+add_executable(krunner-bigclock-window)
+
+target_sources(krunner-bigclock-window PRIVATE
+    src/bigclockapp.cpp
+    src/bigclockwidget.cpp
+    src/bigclockwidget.h
+)
+
+target_link_libraries(krunner-bigclock-window PRIVATE
+    Qt6::Widgets
+)
+
+set_target_properties(krunner-bigclock-window PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
 install(TARGETS krunner_bigclock DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/krunner)
+install(TARGETS krunner-bigclock-window DESTINATION ${KDE_INSTALL_BINDIR})
+install(FILES org.kde.krunner-bigclock.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})

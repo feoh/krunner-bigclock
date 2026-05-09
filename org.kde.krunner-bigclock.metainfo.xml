@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2026 Chris Patti <feoh@feoh.org>
+  SPDX-License-Identifier: CC0-1.0
+-->
+<component type="addon">
+  <id>org.kde.krunner-bigclock</id>
+  <extends>org.kde.krunner</extends>
+  <name>Big Clock</name>
+  <summary>Show a large LED-style digital clock from KRunner</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <developer id="feoh.org">
+    <name>Chris Patti</name>
+  </developer>
+  <description>
+    <p>
+      KRunner Bigclock adds a KRunner result that displays a large 1980s-style LED digital clock in the center of the screen.
+    </p>
+    <p>
+      Invoke it from KRunner with bigclock, big clock, clock, or time.
+    </p>
+  </description>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <keywords>
+    <keyword>krunner</keyword>
+    <keyword>clock</keyword>
+    <keyword>time</keyword>
+    <keyword>digital clock</keyword>
+  </keywords>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/chrispatti/krunner-bigclock/main/docs/images/DigitalClock.png</image>
+      <caption>Big Clock displaying an LED-style digital clock</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/chrispatti/krunner-bigclock</url>
+  <url type="bugtracker">https://github.com/chrispatti/krunner-bigclock/issues</url>
+  <releases>
+    <release version="0.1.0" date="2026-05-09">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1" />
+</component>

@@ -1,6 +1,6 @@
 # KRunner Bigclock
 
-KRunner Bigclock is a KDE Frameworks 6 / Qt 6 KRunner plugin that displays a large 1980s-style LED digital clock in the center of the screen.
+KRunner Bigclock is a KDE Frameworks 6 / Qt 6 KRunner plugin that launches a small helper executable to display a large 1980s-style LED digital clock in the center of the screen.
 
 Invoke it from KRunner with one of:
 
@@ -10,6 +10,8 @@ Invoke it from KRunner with one of:
 - `time`
 
 The clock closes automatically after 30 seconds, or immediately when you press Escape/Enter or click it.
+
+![KRunner Bigclock showing an LED-style digital clock](docs/images/DigitalClock.png)
 
 ## Build
 
@@ -58,11 +60,12 @@ cmake --install build --prefix ~/.local
 Restart KRunner so it discovers the new plugin:
 
 ```sh
-kquitapp6 krunner || true
-krunner --daemon
+krunner --replace --daemon &
 ```
 
 Open KRunner and type `bigclock`. If needed, confirm the plugin is enabled in **System Settings → Search → KRunner → Plugins**.
+
+The install step installs the KRunner plugin, the `krunner-bigclock-window` helper executable, and AppStream metadata. The helper must be discoverable in KRunner's environment. System-wide installs to `/usr` work automatically; for user-local installs, make sure `~/.local/bin` is in your login/session `PATH`.
 
 You can also verify that KRunner sees the plugin with:
 
@@ -70,7 +73,29 @@ You can also verify that KRunner sees the plugin with:
 krunner --list | grep -i "big clock"
 ```
 
-Avoid using plain `krunner &` for restart instructions; on some Plasma systems it may print a portal app-ID warning such as `App info not found for 'org.kde.krunner'`. Starting with `--daemon` avoids that foreground-launch warning.
+If the plugin is listed but no result appears for `bigclock`, check the per-user KRunner config. An explicit disabled entry overrides the plugin's enabled-by-default metadata:
+
+```sh
+kreadconfig6 --file krunnerrc --group Plugins --key krunner_bigclockEnabled
+kwriteconfig6 --file krunnerrc --group Plugins --key krunner_bigclockEnabled true
+krunner --replace --daemon &
+```
+
+If the `Show Big Clock` result appears but activating it does nothing, verify the helper runs directly and inspect recent user-session logs:
+
+```sh
+krunner-bigclock-window
+journalctl --user -b --since "5 minutes ago" | grep -iE "bigclock|krunner"
+```
+
+If the helper works directly but activation from KRunner still does nothing, Plasma may have stale runner/plugin state loaded. Restart Plasma Shell and KRunner:
+
+```sh
+systemctl --user restart plasma-plasmashell.service
+krunner --daemon >/tmp/krunner.log 2>&1 &
+```
+
+Avoid using plain `krunner &` for restart instructions; on some Plasma systems it may print a portal app-ID warning such as `App info not found for 'org.kde.krunner'`. Starting with `krunner --replace --daemon &` avoids that foreground-launch warning, backgrounds the process, and ensures the already-running KRunner process reloads newly installed plugins.
 
 ### System-wide install
 
@@ -78,8 +103,7 @@ To install for all users, install into the KDE/Qt prefix, commonly `/usr` on Lin
 
 ```sh
 sudo cmake --install build --prefix /usr
-kquitapp6 krunner || true
-krunner --daemon
+krunner --replace --daemon &
 ```
 
 ### Uninstall
@@ -88,8 +112,7 @@ Remove the installed module and restart KRunner. For a user-local install:
 
 ```sh
 rm -f ~/.local/lib/qt6/plugins/kf6/krunner/krunner_bigclock.so
-kquitapp6 krunner || true
-krunner --daemon
+krunner --replace --daemon &
 ```
 
 Depending on the distribution, the plugin directory may be `~/.local/lib/plugins/kf6/krunner`, `~/.local/lib64/qt6/plugins/kf6/krunner`, or another Qt plugin path; check the `cmake --install` output if the path differs.

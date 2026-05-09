@@ -2,7 +2,7 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "chris@example.com",
+                "Email": "feoh@feoh.org",
                 "Name": "Chris Patti"
             }
         ],
@@ -10,10 +10,8 @@
         "Description": "Shows a large 1980s-style LED digital clock.",
         "EnabledByDefault": true,
         "Icon": "preferences-system-time",
-        "Id": "krunner_bigclock",
         "License": "GPL-2.0-or-later",
         "Name": "Big Clock",
         "Version": "0.1.0"
-    },
-    "X-Plasma-Runner-Min-Letter-Count": 4
+    }
 }
