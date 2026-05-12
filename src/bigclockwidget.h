@@ -4,6 +4,7 @@
 #ifndef BIGCLOCKWIDGET_H
 #define BIGCLOCKWIDGET_H
 
+#include <QString>
 #include <QWidget>
 
 class QLabel;
@@ -14,7 +15,15 @@ class BigClockWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit BigClockWidget(QWidget* parent = nullptr);
+    enum class Style {
+        Led,
+        Mechanical,
+        Nixie,
+    };
+
+    static Style styleFromString(const QString& name);
+
+    explicit BigClockWidget(Style style = Style::Led, QWidget* parent = nullptr);
     void showCentered();
 
 protected:
@@ -24,7 +33,9 @@ protected:
 private:
     void updateClock();
 
-    QLCDNumber* m_timeDisplay = nullptr;
+    Style m_style = Style::Led;
+    QLCDNumber* m_lcdDisplay = nullptr;
+    QLabel* m_textDisplay = nullptr;
     QLabel* m_dateLabel = nullptr;
     QTimer* m_tickTimer = nullptr;
     QTimer* m_closeTimer = nullptr;

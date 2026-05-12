@@ -7,7 +7,7 @@
   <id>org.kde.krunner-bigclock</id>
   <extends>org.kde.krunner</extends>
   <name>Big Clock</name>
-  <summary>Show a large LED-style digital clock from KRunner</summary>
+  <summary>Show a large digital clock from KRunner</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
   <developer id="feoh.org">
@@ -15,7 +15,11 @@
   </developer>
   <description>
     <p>
-      KRunner Bigclock adds a KRunner result that displays a large 1980s-style LED digital clock in the center of the screen.
+      KRunner Bigclock adds a KRunner result that displays a large digital clock in the center of the screen.
+    </p>
+    <p>
+      The clock can be shown as a 1980s-style LED display, a mechanical split-flap clock, or Nixie tubes,
+      selectable from the plugin's configuration page.
     </p>
     <p>
       Invoke it from KRunner with bigclock, big clock, clock, or time.

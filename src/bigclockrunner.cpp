@@ -3,6 +3,7 @@
 
 #include "bigclockrunner.h"
 
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KRunner/QueryMatch>
@@ -36,7 +37,7 @@ void appendDebugLog(const QString& message)
 BigClockRunner::BigClockRunner(QObject* parent, const KPluginMetaData& metadata)
     : KRunner::AbstractRunner(parent, metadata)
 {
-    addSyntax({ QStringLiteral("bigclock"), QStringLiteral("big clock") }, i18n("Show a large LED-style clock"));
+    addSyntax({ QStringLiteral("bigclock"), QStringLiteral("big clock") }, i18n("Show a large digital clock"));
 }
 
 void BigClockRunner::match(KRunner::RunnerContext& context)
@@ -59,7 +60,7 @@ void BigClockRunner::match(KRunner::RunnerContext& context)
     KRunner::QueryMatch match(this);
     match.setId(QStringLiteral("show-bigclock"));
     match.setText(i18n("Show Big Clock"));
-    match.setSubtext(i18n("Display a large 1980s-style LED clock in the center of the screen"));
+    match.setSubtext(i18n("Display a large digital clock in the center of the screen"));
     match.setIconName(QStringLiteral("preferences-system-time"));
     match.setRelevance(1.0);
     match.setCategoryRelevance(KRunner::QueryMatch::CategoryRelevance::Highest);
@@ -75,13 +76,16 @@ void BigClockRunner::run(const KRunner::RunnerContext& context, const KRunner::Q
         executable = QStringLiteral(BIGCLOCK_INSTALL_BINDIR "/krunner-bigclock-window");
     }
 
+    const QString style = config().readEntry("style", QStringLiteral("led"));
+    const QStringList arguments { QStringLiteral("--style=%1").arg(style) };
+
     qWarning() << "krunner-bigclock run invoked for match" << match.id();
-    qWarning() << "krunner-bigclock launching" << executable;
+    qWarning() << "krunner-bigclock launching" << executable << arguments;
     appendDebugLog(QStringLiteral("run invoked for match: %1").arg(match.id()));
-    appendDebugLog(QStringLiteral("launching: %1").arg(executable));
+    appendDebugLog(QStringLiteral("launching: %1 --style=%2").arg(executable, style));
 
     qint64 processId = 0;
-    const bool started = QProcess::startDetached(executable, QStringList { }, QString(), &processId);
+    const bool started = QProcess::startDetached(executable, arguments, QString(), &processId);
     qWarning() << "krunner-bigclock launch result" << started << "pid" << processId;
     appendDebugLog(QStringLiteral("launch result: %1 pid: %2").arg(started).arg(processId));
 

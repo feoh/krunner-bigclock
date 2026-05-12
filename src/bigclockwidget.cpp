@@ -3,27 +3,61 @@
 
 #include "bigclockwidget.h"
 
-#include <QApplication>
+#include <QColor>
 #include <QCursor>
 #include <QDateTime>
+#include <QFont>
 #include <QFrame>
+#include <QGraphicsDropShadowEffect>
 #include <QGuiApplication>
 #include <QKeyEvent>
-#include <QLCDNumber>
 #include <QLabel>
+#include <QLCDNumber>
+#include <QLatin1String>
 #include <QMouseEvent>
-#include <QPalette>
 #include <QScreen>
+#include <QString>
 #include <QTimer>
 #include <QVBoxLayout>
 
 namespace {
 constexpr int autoCloseMilliseconds = 30000;
+
+struct ClockPalette {
+    QString windowBackground;
+    QString windowBorder;
+    QString dateColor;
+};
+
+ClockPalette paletteFor(BigClockWidget::Style style)
+{
+    switch (style) {
+    case BigClockWidget::Style::Mechanical:
+        return { QStringLiteral("#101012"), QStringLiteral("#000000"), QStringLiteral("#d6d6cf") };
+    case BigClockWidget::Style::Nixie:
+        return { QStringLiteral("#080605"), QStringLiteral("#1c1610"), QStringLiteral("#ff9b3d") };
+    case BigClockWidget::Style::Led:
+    default:
+        return { QStringLiteral("#120300"), QStringLiteral("#3a0b00"), QStringLiteral("#ff8a3d") };
+    }
+}
 }
 
-BigClockWidget::BigClockWidget(QWidget* parent)
+BigClockWidget::Style BigClockWidget::styleFromString(const QString& name)
+{
+    const QString normalized = name.trimmed().toLower();
+    if (normalized == QLatin1String("mechanical")) {
+        return Style::Mechanical;
+    }
+    if (normalized == QLatin1String("nixie")) {
+        return Style::Nixie;
+    }
+    return Style::Led;
+}
+
+BigClockWidget::BigClockWidget(Style style, QWidget* parent)
     : QWidget(parent)
-    , m_timeDisplay(new QLCDNumber(this))
+    , m_style(style)
     , m_dateLabel(new QLabel(this))
     , m_tickTimer(new QTimer(this))
     , m_closeTimer(new QTimer(this))
@@ -39,32 +73,88 @@ BigClockWidget::BigClockWidget(QWidget* parent)
     layout->setContentsMargins(48, 36, 48, 36);
     layout->setSpacing(14);
 
-    m_timeDisplay->setDigitCount(8);
-    m_timeDisplay->setSegmentStyle(QLCDNumber::Filled);
-    m_timeDisplay->setFrameShape(QFrame::NoFrame);
-    m_timeDisplay->setMinimumSize(760, 220);
-    m_timeDisplay->setStyleSheet(QStringLiteral("QLCDNumber {"
-                                                "  color: #ff2b15;"
-                                                "  background-color: #120300;"
-                                                "}"));
+    const ClockPalette palette = paletteFor(m_style);
+
+    switch (m_style) {
+    case Style::Mechanical: {
+        m_textDisplay = new QLabel(this);
+        m_textDisplay->setAlignment(Qt::AlignCenter);
+        QFont font(QStringLiteral("DejaVu Sans Mono"));
+        font.setStyleHint(QFont::Monospace);
+        font.setPixelSize(150);
+        font.setBold(true);
+        m_textDisplay->setFont(font);
+        m_textDisplay->setMinimumSize(760, 220);
+        m_textDisplay->setStyleSheet(QStringLiteral("QLabel {"
+                                                    "  color: #f3f3ea;"
+                                                    "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                                                    "    stop:0 #2c2c30, stop:0.49 #232327,"
+                                                    "    stop:0.5 #0d0d0f, stop:1 #18181b);"
+                                                    "  border: 4px solid #000000;"
+                                                    "  border-radius: 18px;"
+                                                    "  padding: 18px 40px;"
+                                                    "}"));
+        layout->addWidget(m_textDisplay);
+        break;
+    }
+    case Style::Nixie: {
+        m_textDisplay = new QLabel(this);
+        m_textDisplay->setAlignment(Qt::AlignCenter);
+        QFont font(QStringLiteral("DejaVu Sans Mono"));
+        font.setStyleHint(QFont::Monospace);
+        font.setPixelSize(160);
+        font.setWeight(QFont::Medium);
+        m_textDisplay->setFont(font);
+        m_textDisplay->setMinimumSize(780, 240);
+        m_textDisplay->setStyleSheet(QStringLiteral("QLabel {"
+                                                    "  color: #ff7a18;"
+                                                    "  background-color: #0a0806;"
+                                                    "  border: 3px solid #1c1610;"
+                                                    "  border-radius: 22px;"
+                                                    "  padding: 18px 48px;"
+                                                    "}"));
+        auto* glow = new QGraphicsDropShadowEffect(m_textDisplay);
+        glow->setBlurRadius(40.0);
+        glow->setColor(QColor(255, 138, 24, 210));
+        glow->setOffset(0.0, 0.0);
+        m_textDisplay->setGraphicsEffect(glow);
+        layout->addWidget(m_textDisplay);
+        break;
+    }
+    case Style::Led:
+    default: {
+        m_lcdDisplay = new QLCDNumber(this);
+        m_lcdDisplay->setDigitCount(8);
+        m_lcdDisplay->setSegmentStyle(QLCDNumber::Filled);
+        m_lcdDisplay->setFrameShape(QFrame::NoFrame);
+        m_lcdDisplay->setMinimumSize(760, 220);
+        m_lcdDisplay->setStyleSheet(QStringLiteral("QLCDNumber {"
+                                                   "  color: #ff2b15;"
+                                                   "  background-color: #120300;"
+                                                   "}"));
+        layout->addWidget(m_lcdDisplay);
+        break;
+    }
+    }
 
     m_dateLabel->setAlignment(Qt::AlignCenter);
     m_dateLabel->setStyleSheet(QStringLiteral("QLabel {"
-                                              "  color: #ff8a3d;"
+                                              "  color: %1;"
                                               "  font-size: 36px;"
                                               "  font-weight: 700;"
                                               "  letter-spacing: 3px;"
-                                              "  background-color: #120300;"
-                                              "}"));
+                                              "  background: transparent;"
+                                              "}")
+                                   .arg(palette.dateColor));
+
+    layout->addWidget(m_dateLabel);
 
     setStyleSheet(QStringLiteral("BigClockWidget {"
-                                 "  background-color: #120300;"
-                                 "  border: 6px solid #3a0b00;"
+                                 "  background-color: %1;"
+                                 "  border: 6px solid %2;"
                                  "  border-radius: 24px;"
-                                 "}"));
-
-    layout->addWidget(m_timeDisplay);
-    layout->addWidget(m_dateLabel);
+                                 "}")
+                      .arg(palette.windowBackground, palette.windowBorder));
 
     m_tickTimer->setInterval(1000);
     connect(m_tickTimer, &QTimer::timeout, this, &BigClockWidget::updateClock);
@@ -117,6 +207,14 @@ void BigClockWidget::mousePressEvent(QMouseEvent* event)
 void BigClockWidget::updateClock()
 {
     const QDateTime now = QDateTime::currentDateTime();
-    m_timeDisplay->display(now.toString(QStringLiteral("HH:mm:ss")));
+    const QString timeText = now.toString(QStringLiteral("HH:mm:ss"));
+
+    if (m_lcdDisplay != nullptr) {
+        m_lcdDisplay->display(timeText);
+    }
+    if (m_textDisplay != nullptr) {
+        m_textDisplay->setText(timeText);
+    }
+
     m_dateLabel->setText(now.toString(QStringLiteral("dddd, MMMM d, yyyy")).toUpper());
 }
