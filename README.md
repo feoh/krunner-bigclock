@@ -18,13 +18,35 @@ The clock closes automatically after 30 seconds, or immediately when you press E
 Big Clock can render the time in three styles:
 
 - **LED digital** – a 1980s-style red seven-segment display (the default)
-- **Mechanical flip** – a split-flap "flip clock" board
 - **Nixie tube** – warm amber glowing tube digits
+- **Mechanical flip** – a vintage rolling-number mechanical clock
 
-Pick one from **System Settings → Search → KRunner → Plugins**, then click the
-configure (gear) button next to **Big Clock**. The setting is also available
-directly from the KRunner overlay's configuration. Your choice takes effect the
-next time you open the clock.
+Open **System Settings → Search → Plasma Search**, then find **Big Clock** in
+the plugin list.
+
+![System Settings showing Search, Plasma Search, and the Big Clock plugin](docs/images/ConfigurePlasmaSearch.png)
+
+Click the configure button next to **Big Clock**, then choose the clock style
+from the **Clock style** dropdown.
+
+![Big Clock configuration dialog showing the clock style dropdown](docs/images/ConfigureClockStyle.png)
+
+The setting is also available directly from the KRunner overlay's
+configuration. Your choice takes effect the next time you open the clock.
+
+### Clock styles
+
+Choose **LED digital** for the default red seven-segment display.
+
+![Big Clock LED digital style](docs/images/ClockStyleLed.png)
+
+Choose **Nixie tube** for glowing amber tube digits.
+
+![Big Clock Nixie tube style](docs/images/ClockStyleNixie.png)
+
+Choose **Mechanical flip** for a vintage rolling-number mechanical clock.
+
+![Big Clock mechanical style](docs/images/ClockStyleMechanical.png)
 
 ## Build
 

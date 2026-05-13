@@ -10,6 +10,7 @@
 class QLabel;
 class QLCDNumber;
 class QTimer;
+class StyledClockFace;
 
 class BigClockWidget : public QWidget {
     Q_OBJECT
@@ -35,6 +36,7 @@ private:
 
     Style m_style = Style::Led;
     QLCDNumber* m_lcdDisplay = nullptr;
+    StyledClockFace* m_faceDisplay = nullptr;
     QLabel* m_textDisplay = nullptr;
     QLabel* m_dateLabel = nullptr;
     QTimer* m_tickTimer = nullptr;

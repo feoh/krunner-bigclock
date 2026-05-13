@@ -48,6 +48,7 @@ target_sources(krunner-bigclock-window PRIVATE
 
 target_link_libraries(krunner-bigclock-window PRIVATE
     Qt6::Widgets
+    KF6::ConfigCore
 )
 
 set_target_properties(krunner-bigclock-window PROPERTIES

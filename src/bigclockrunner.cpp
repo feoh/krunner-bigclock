@@ -3,6 +3,7 @@
 
 #include "bigclockrunner.h"
 
+#include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
@@ -76,7 +77,9 @@ void BigClockRunner::run(const KRunner::RunnerContext& context, const KRunner::Q
         executable = QStringLiteral(BIGCLOCK_INSTALL_BINDIR "/krunner-bigclock-window");
     }
 
-    const QString style = config().readEntry("style", QStringLiteral("led"));
+    KConfigGroup runnerConfig = config();
+    runnerConfig.config()->reparseConfiguration();
+    const QString style = runnerConfig.readEntry("style", QStringLiteral("led"));
     const QStringList arguments { QStringLiteral("--style=%1").arg(style) };
 
     qWarning() << "krunner-bigclock run invoked for match" << match.id();

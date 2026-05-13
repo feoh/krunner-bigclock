@@ -75,7 +75,8 @@ void BigClockConfig::defaults()
     }
 
     KCModule::defaults();
-    setNeedsSave(m_styleCombo->currentData().toString() != runnerConfigGroup().readEntry("style", QStringLiteral("led")));
+    setNeedsSave(
+        m_styleCombo->currentData().toString() != runnerConfigGroup().readEntry("style", QStringLiteral("led")));
 }
 
 #include "bigclockconfig.moc"
