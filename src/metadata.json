@@ -7,11 +7,12 @@
             }
         ],
         "Category": "Utilities",
-        "Description": "Shows a large 1980s-style LED digital clock.",
+        "Description": "Shows a large digital clock (LED, mechanical flip, or Nixie tube style).",
         "EnabledByDefault": true,
         "Icon": "preferences-system-time",
         "License": "GPL-2.0-or-later",
         "Name": "Big Clock",
         "Version": "0.1.0"
-    }
+    },
+    "X-KDE-ConfigModule": "kf6/krunner/kcms/kcm_krunner_bigclock"
 }

@@ -14,7 +14,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 
 find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Widgets)
-find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS Config I18n Runner)
+find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS Config CoreAddons I18n KCMUtils Runner)
 
 add_library(krunner_bigclock MODULE)
 
@@ -48,6 +48,7 @@ target_sources(krunner-bigclock-window PRIVATE
 
 target_link_libraries(krunner-bigclock-window PRIVATE
     Qt6::Widgets
+    KF6::ConfigCore
 )
 
 set_target_properties(krunner-bigclock-window PROPERTIES
@@ -56,6 +57,28 @@ set_target_properties(krunner-bigclock-window PROPERTIES
     CXX_EXTENSIONS OFF
 )
 
+add_library(kcm_krunner_bigclock MODULE)
+
+target_sources(kcm_krunner_bigclock PRIVATE
+    src/bigclockconfig.cpp
+    src/bigclockconfig.h
+)
+
+target_link_libraries(kcm_krunner_bigclock PRIVATE
+    Qt6::Widgets
+    KF6::ConfigCore
+    KF6::CoreAddons
+    KF6::I18n
+    KF6::KCMUtils
+)
+
+set_target_properties(kcm_krunner_bigclock PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
 install(TARGETS krunner_bigclock DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/krunner)
 install(TARGETS krunner-bigclock-window DESTINATION ${KDE_INSTALL_BINDIR})
+install(TARGETS kcm_krunner_bigclock DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/krunner/kcms)
 install(FILES org.kde.krunner-bigclock.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})

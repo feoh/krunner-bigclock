@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "feoh@feoh.org",
+                "Name": "Chris Patti"
+            }
+        ],
+        "Description": "Configure the Big Clock display style",
+        "Id": "kcm_krunner_bigclock",
+        "License": "GPL-2.0-or-later",
+        "Name": "Big Clock"
+    }
+}

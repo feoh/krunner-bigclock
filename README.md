@@ -1,6 +1,6 @@
 # KRunner Bigclock
 
-KRunner Bigclock is a KDE Frameworks 6 / Qt 6 KRunner plugin that launches a small helper executable to display a large 1980s-style LED digital clock in the center of the screen.
+KRunner Bigclock is a KDE Frameworks 6 / Qt 6 KRunner plugin that launches a small helper executable to display a large digital clock in the center of the screen.
 
 Invoke it from KRunner with one of:
 
@@ -13,6 +13,41 @@ The clock closes automatically after 30 seconds, or immediately when you press E
 
 ![KRunner Bigclock showing an LED-style digital clock](docs/images/DigitalClock.png)
 
+## Choosing the clock style
+
+Big Clock can render the time in three styles:
+
+- **LED digital** – a 1980s-style red seven-segment display (the default)
+- **Nixie tube** – warm amber glowing tube digits
+- **Mechanical flip** – a vintage rolling-number mechanical clock
+
+Open **System Settings → Search → Plasma Search**, then find **Big Clock** in
+the plugin list.
+
+![System Settings showing Search, Plasma Search, and the Big Clock plugin](docs/images/ConfigurePlasmaSearch.png)
+
+Click the configure button next to **Big Clock**, then choose the clock style
+from the **Clock style** dropdown.
+
+![Big Clock configuration dialog showing the clock style dropdown](docs/images/ConfigureClockStyle.png)
+
+The setting is also available directly from the KRunner overlay's
+configuration. Your choice takes effect the next time you open the clock.
+
+### Clock styles
+
+Choose **LED digital** for the default red seven-segment display.
+
+![Big Clock LED digital style](docs/images/ClockStyleLed.png)
+
+Choose **Nixie tube** for glowing amber tube digits.
+
+![Big Clock Nixie tube style](docs/images/ClockStyleNixie.png)
+
+Choose **Mechanical flip** for a vintage rolling-number mechanical clock.
+
+![Big Clock mechanical style](docs/images/ClockStyleMechanical.png)
+
 ## Build
 
 Install build dependencies first.
@@ -20,13 +55,13 @@ Install build dependencies first.
 ### Arch Linux / CachyOS
 
 ```sh
-sudo pacman -S --needed base-devel cmake extra-cmake-modules qt6-base ki18n krunner kconfig
+sudo pacman -S --needed base-devel cmake extra-cmake-modules qt6-base ki18n krunner kconfig kcmutils
 ```
 
 ### Fedora
 
 ```sh
-sudo dnf install cmake extra-cmake-modules gcc-c++ make qt6-qtbase-devel kf6-ki18n-devel kf6-krunner-devel kf6-kconfig-devel
+sudo dnf install cmake extra-cmake-modules gcc-c++ make qt6-qtbase-devel kf6-ki18n-devel kf6-krunner-devel kf6-kconfig-devel kf6-kcmutils-devel
 ```
 
 ### Ubuntu / Debian
@@ -35,7 +70,7 @@ KF6 development packages are available in recent Ubuntu/Debian releases. Package
 
 ```sh
 sudo apt update
-sudo apt install build-essential cmake extra-cmake-modules qt6-base-dev libkf6i18n-dev libkf6runner-dev libkf6config-dev
+sudo apt install build-essential cmake extra-cmake-modules qt6-base-dev libkf6i18n-dev libkf6runner-dev libkf6config-dev libkf6kcmutils-dev
 ```
 
 If `libkf6runner-dev` is unavailable, your distribution release may not ship KF6 KRunner development headers yet; use a newer release or install the KDE Frameworks 6 development packages from your distribution's KDE/Plasma repository.
@@ -112,6 +147,7 @@ Remove the installed module and restart KRunner. For a user-local install:
 
 ```sh
 rm -f ~/.local/lib/qt6/plugins/kf6/krunner/krunner_bigclock.so
+rm -f ~/.local/lib/qt6/plugins/kf6/krunner/kcms/kcm_krunner_bigclock.so
 krunner --replace --daemon &
 ```
 
