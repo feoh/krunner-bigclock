@@ -1,0 +1,38 @@
+# Maintainer: Chris Patti <feoh@feoh.org>
+
+pkgname=krunner-bigclock
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='KRunner plugin that displays a large configurable clock'
+arch=('x86_64')
+url='https://github.com/feoh/krunner-bigclock'
+license=('MIT')
+depends=(
+    'gcc-libs'
+    'glibc'
+    'kcmutils'
+    'kconfig'
+    'ki18n'
+    'krunner'
+    'qt6-base'
+)
+makedepends=(
+    'cmake'
+    'extra-cmake-modules'
+)
+source=("${pkgname}-${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+    cmake -S "${pkgname}-${pkgver}" -B build \
+        -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DBUILD_TESTING=OFF
+    cmake --build build
+}
+
+package() {
+    DESTDIR="${pkgdir}" cmake --install build
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSES/MIT.txt" "${pkgdir}/usr/share/licenses/${pkgname}/MIT.txt"
+}

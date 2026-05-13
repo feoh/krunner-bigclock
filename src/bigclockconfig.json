@@ -8,7 +8,7 @@
         ],
         "Description": "Configure the Big Clock display style",
         "Id": "kcm_krunner_bigclock",
-        "License": "GPL-2.0-or-later",
+        "License": "MIT",
         "Name": "Big Clock"
     }
 }

@@ -9,7 +9,7 @@
   <name>Big Clock</name>
   <summary>Show a large digital clock from KRunner</summary>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>GPL-2.0-or-later</project_license>
+  <project_license>MIT</project_license>
   <developer id="feoh.org">
     <name>Chris Patti</name>
   </developer>

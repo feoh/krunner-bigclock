@@ -2,6 +2,8 @@
 
 KRunner Bigclock is a KDE Frameworks 6 / Qt 6 KRunner plugin that launches a small helper executable to display a large digital clock in the center of the screen.
 
+KRunner Bigclock is licensed under the MIT license.
+
 Invoke it from KRunner with one of:
 
 - `bigclock`
@@ -152,6 +154,74 @@ krunner --replace --daemon &
 ```
 
 Depending on the distribution, the plugin directory may be `~/.local/lib/plugins/kf6/krunner`, `~/.local/lib64/qt6/plugins/kf6/krunner`, or another Qt plugin path; check the `cmake --install` output if the path differs.
+
+## Build Distribution Packages
+
+Packaging metadata is included for Arch Linux, Debian/Ubuntu, and
+Fedora/RHEL-style RPM builds. These package recipes expect KDE Frameworks 6 and
+Qt 6 development packages to be available from the target distribution.
+
+### Arch Linux Package
+
+From the repository root, create a source archive, copy the `PKGBUILD` into a
+clean packaging directory, then build with `makepkg`:
+
+```sh
+mkdir -p build-package/arch
+tar --exclude=.git --exclude=build --exclude=build-clang --exclude=build-package \
+    --transform='s#^\./#krunner-bigclock-0.1.0/#' \
+    -czf build-package/arch/krunner-bigclock-0.1.0.tar.gz .
+cp packaging/arch/PKGBUILD build-package/arch/
+cd build-package/arch
+makepkg -sr
+```
+
+For release builds from a published tag, update `source` and `sha256sums` in
+`packaging/arch/PKGBUILD` to point at the tagged GitHub source archive.
+
+### Debian/Ubuntu Package
+
+Debian/Ubuntu packaging metadata is included but has not yet been validated in
+a Debian or Ubuntu build environment.
+
+Build the Debian package directly from the source tree:
+
+```sh
+dpkg-buildpackage -us -uc -b
+```
+
+The resulting `.deb` files are written to the parent directory. On Ubuntu or
+Debian releases that do not yet ship KF6 KRunner development packages,
+`libkf6runner-dev` may be unavailable; use a release with KDE Frameworks 6
+development packages.
+
+Run Debian package checks on a Debian or Ubuntu system:
+
+```sh
+lintian ../krunner-bigclock_*.changes
+```
+
+On Arch Linux, avoid installing the AUR `lintian` package just to validate this
+package. Its dependency chain includes Debian `apt`, which may conflict with
+Arch systems using `zlib-ng-compat`. Prefer running `dpkg-buildpackage` and
+`lintian` in a Debian/Ubuntu VM, container, or chroot.
+
+### Fedora/RHEL RPM Package
+
+Fedora/RHEL RPM packaging metadata is included but has not yet been validated
+in a Fedora or RHEL build environment.
+
+Create a source archive, copy the RPM spec into `rpmbuild`, and build:
+
+```sh
+mkdir -p ~/rpmbuild/SOURCES ~/rpmbuild/SPECS
+git archive --format=tar.gz --prefix=krunner-bigclock-0.1.0/ \
+    -o ~/rpmbuild/SOURCES/krunner-bigclock-0.1.0.tar.gz HEAD
+cp packaging/rpm/krunner-bigclock.spec ~/rpmbuild/SPECS/
+rpmbuild -ba ~/rpmbuild/SPECS/krunner-bigclock.spec
+```
+
+Binary RPMs are written under `~/rpmbuild/RPMS/`.
 
 ## Linting tools
 

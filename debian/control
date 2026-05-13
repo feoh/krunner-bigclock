@@ -1,0 +1,26 @@
+Source: krunner-bigclock
+Section: kde
+Priority: optional
+Maintainer: Chris Patti <feoh@feoh.org>
+Build-Depends:
+ cmake,
+ debhelper-compat (= 13),
+ extra-cmake-modules,
+ g++,
+ libkf6config-dev,
+ libkf6i18n-dev,
+ libkf6kcmutils-dev,
+ libkf6runner-dev,
+ qt6-base-dev
+Standards-Version: 4.7.0
+Homepage: https://github.com/feoh/krunner-bigclock
+Rules-Requires-Root: no
+
+Package: krunner-bigclock
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: large configurable clock plugin for KRunner
+ KRunner Bigclock adds a KRunner result that launches a large, centered clock.
+ The clock can be displayed as an LED, Nixie tube, or mechanical style clock.

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Chris Patti <feoh@feoh.org>
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: MIT
 
 #ifndef BIGCLOCKCONFIG_H
 #define BIGCLOCKCONFIG_H

@@ -10,7 +10,7 @@
         "Description": "Shows a large digital clock (LED, mechanical flip, or Nixie tube style).",
         "EnabledByDefault": true,
         "Icon": "preferences-system-time",
-        "License": "GPL-2.0-or-later",
+        "License": "MIT",
         "Name": "Big Clock",
         "Version": "0.1.0"
     },
